@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <title>Stockroom — Inventory</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Stockroom home"><span class="brand-mark">S</span><span>Stockroom</span></a>
+    <span class="topbar-note">Simple inventory tracking</span>
+  </header>
+
+  <main class="page">
+    <section class="intro">
+      <div><p class="eyebrow">YOUR WORKSPACE</p><h1>Inventory</h1><p class="subheading">Keep track of what you have, and what needs restocking.</p></div>
+      <button class="button button-primary" id="add-product-button" type="button"><span aria-hidden="true">＋</span> Add a product</button>
+    </section>
+
+    <section class="stats" aria-label="Inventory summary">
+      <article class="stat-card"><span class="stat-icon indigo" aria-hidden="true">▦</span><div><p class="stat-label">Products</p><p class="stat-value" id="total-products">0</p></div></article>
+      <article class="stat-card"><span class="stat-icon green" aria-hidden="true">✓</span><div><p class="stat-label">Units in stock</p><p class="stat-value" id="total-units">0</p></div></article>
+      <article class="stat-card"><span class="stat-icon amber" aria-hidden="true">!</span><div><p class="stat-label">Low stock</p><p class="stat-value" id="low-stock-count">0</p></div></article>
+    </section>
+
+    <section class="panel inventory-panel">
+      <div class="panel-heading"><div><h2>Your products</h2><p id="product-count-label">0 products</p></div><label class="search-box"><span aria-hidden="true">⌕</span><span class="visually-hidden">Search products</span><input id="search-input" type="search" placeholder="Search products…"></label></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>PRODUCT</th><th>SKU</th><th>QUANTITY</th><th>STATUS</th><th>UPDATED</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+          <tbody id="inventory-rows"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state"><span class="empty-icon" aria-hidden="true">▦</span><h3>No products yet</h3><p>Add your first product to start tracking stock.</p><button class="button button-primary" id="empty-add-button" type="button">Add a product</button></div>
+      <p class="no-results" id="no-results" hidden>No products match your search.</p>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-heading"><div><h2>Recent activity</h2><p>Your latest stock changes</p></div><button class="text-button" id="clear-history-button" type="button">Clear history</button></div>
+      <ul class="activity-list" id="activity-list"></ul>
+      <p class="history-empty" id="history-empty">Stock changes will show up here.</p>
+    </section>
+    <p class="privacy-note"><span aria-hidden="true">🔒</span> This demo saves data in this browser on this device. It is not shared or backed up online.</p>
+  </main>
+
+  <dialog id="product-dialog" class="dialog">
+    <form id="product-form">
+      <div class="dialog-heading"><div><p class="eyebrow">PRODUCT DETAILS</p><h2 id="dialog-title">Add a product</h2></div><button class="icon-button" type="button" data-close aria-label="Close">×</button></div>
+      <input id="product-id" type="hidden">
+      <label class="field">Product name <span class="required">*</span><input id="product-name" name="name" required maxlength="80" placeholder="e.g. Blue notebook"></label>
+      <label class="field">SKU <span class="optional">(optional)</span><input id="product-sku" name="sku" maxlength="40" placeholder="e.g. NOTE-001"></label>
+      <div class="field-row"><label class="field">Quantity <span class="required">*</span><input id="product-quantity" name="quantity" type="number" min="0" step="1" required value="0"></label><label class="field">Low-stock alert at<input id="product-threshold" name="threshold" type="number" min="0" step="1" value="5"></label></div>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button class="button button-secondary" type="button" data-close>Cancel</button><button class="button button-primary" type="submit">Save product</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="adjust-dialog" class="dialog">
+    <form id="adjust-form">
+      <div class="dialog-heading"><div><p class="eyebrow">UPDATE STOCK</p><h2 id="adjust-title">Adjust quantity</h2></div><button class="icon-button" type="button" data-close aria-label="Close">×</button></div>
+      <input id="adjust-product-id" type="hidden">
+      <p class="current-stock" id="current-stock"></p>
+      <label class="field">Change quantity <span class="required">*</span><input id="adjust-amount" type="number" step="1" required placeholder="Use a positive number to add, negative to remove"></label>
+      <p class="helper-text">For example, enter <strong>8</strong> to add 8 units or <strong>-2</strong> to remove 2.</p>
+      <p class="form-error" id="adjust-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button class="button button-secondary" type="button" data-close>Cancel</button><button class="button button-primary" type="submit">Update stock</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
